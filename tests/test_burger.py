@@ -85,25 +85,19 @@ class TestBurger:
         assert lines[4] == ''
         assert lines[5] == 'Price: 400'
 
-    def test_burger_mocked_database(self):
-        mock_bun = MagicMock()
-        mock_bun.get_name.return_value = 'mocked bun'
-        mock_bun.get_price.return_value = 50.0
-        
-        mock_ingredient = MagicMock()
-        mock_ingredient.get_price.return_value = 100.0
-        mock_ingredient.get_name.return_value = 'mocked cutlet'
-        mock_ingredient.get_type.return_value = 'FILLING'
-
-        burger = Burger()
+    def test_initializing_burger_mock_data(self, mock_bun, mock_ingredient, burger):
         burger.set_buns(mock_bun)
         burger.add_ingredient(mock_ingredient)
         assert burger.get_price() == 200.0
-        receipt = burger.get_receipt()
-        assert '(==== mocked bun ====)' in receipt
-        assert '= filling mocked cutlet =' in receipt
         mock_bun.get_name.assert_called()
         mock_bun.get_price.assert_called()
         mock_ingredient.get_price.assert_called()
         mock_ingredient.get_name.assert_called()
         mock_ingredient.get_type.assert_called()
+
+    def test_receipt_from_mock_data(self, mock_bun, mock_ingredient, burger):
+        burger.set_buns(mock_bun)
+        burger.add_ingredient(mock_ingredient)
+        receipt = burger.get_receipt()
+        assert '(==== mocked bun ====)' in receipt
+        assert '= filling mocked cutlet =' in receipt
